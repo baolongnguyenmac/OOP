@@ -15,6 +15,12 @@ using namespace sf;
 
 #define SPEED_BALL 0.5f
 #define SIZE_BALL Vector2f(20, 20)
+#define LEFT_UP 1
+#define RIGHT_UP 2
+#define RIGHT 3
+#define RIGHT_DOWN 4
+#define LEFT_DOWN 5
+#define LEFT 6
 
 #define SIZE_PADDLE Vector2f(30, 150)
 #define SPEED_PADDLE 1.0f
