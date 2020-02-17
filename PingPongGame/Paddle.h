@@ -50,6 +50,10 @@ class CPaddle {
             }
         }
 
+        void drawPaddle(RenderWindow &window) {
+            window.draw(_paddle);
+        }
+
     private:
         RectangleShape _paddle;
         float _speed;

@@ -116,6 +116,10 @@ class CBall {
             }
         }
 
+        void drawBall(RenderWindow &window) {
+            window.draw(_ball);
+        }
+
     private:
         RectangleShape _ball;
         float _speed;
