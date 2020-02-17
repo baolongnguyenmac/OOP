@@ -13,10 +13,29 @@ class CPaddle {
             _playerServe = false;
         }
 
-        
+        RectangleShape getPaddle() {
+            return _paddle;
+        }
 
+        void setPlayerServe(bool b) {
+            _playerServe = b;
+        }
+        bool getPlayerServe() {
+            return _playerServe;
+        }
+
+        int getPoint() {
+            return _point;
+        }
         void setPoint(int point) {
             _point = point;
+        }
+
+        void setSpeed(float speed) {
+            _speed = speed;
+        }
+        float getSpeed() {
+            return _speed;
         }
 
         void moveUp() {
