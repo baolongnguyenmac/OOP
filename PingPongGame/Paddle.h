@@ -40,13 +40,13 @@ class CPaddle {
         }
 
         void moveUp() {
-            if (_paddle.getPosition().x >= 0) {
+            if (_paddle.getPosition().y >= 0) {
                 _paddle.setPosition(_paddle.getPosition().x, _paddle.getPosition().y - _speed);
             }
         }
 
         void moveDown() {
-            if (_paddle.getPosition().x + SIZE_PADDLE.y <= HEIGHT_SCREEN) {
+            if (_paddle.getPosition().y + SIZE_PADDLE.y <= HEIGHT_SCREEN) {
                 _paddle.setPosition(_paddle.getPosition().x, _paddle.getPosition().y + _speed);
             }
         }
