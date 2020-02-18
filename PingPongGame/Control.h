@@ -41,9 +41,7 @@ class CControl {
     // private:
     //     static CControl *_instance;
     //     CControl() {
-    //         if (_instance == NULL) {
-    //             _instance = new CControl;
-    //         }
+    //         _instance = new CControl;
     //     }
 };
 
