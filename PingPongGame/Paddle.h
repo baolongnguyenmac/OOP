@@ -5,7 +5,9 @@
 
 class CPaddle {
     public:
-        CPaddle(Vector2f beginPos) {
+        CPaddle(Vector2f beginPos, Vector2f scorePos) {
+            _text.setPosition(scorePos);
+            setupText();
             _paddle.setPosition(beginPos);
             _speed = SPEED_PADDLE;
             _paddle.setFillColor(Color::White);
@@ -55,11 +57,24 @@ class CPaddle {
             window.draw(_paddle);
         }
 
+        void setupText() {
+            if (!_font.loadFromFile("Rainbow Colors - TTF.ttf")) {
+                cout << "Can't load font Rainbow Colors - TTF.ttf\n";
+            }
+
+            _text.setFont(_font);
+            _text.setString(to_string(_point));
+            _text.setColor(Color::Green);
+            _text.setCharacterSize(150);
+        }
+
     private:
         RectangleShape _paddle;
         float _speed;
         int _point;
         bool _playerServe;
+        Font _font;
+        Text _text;
 };
 
 #endif
