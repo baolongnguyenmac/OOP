@@ -10,6 +10,8 @@ using namespace sf;
 #include "string"
 #include "vector"
 
+#include "stdlib.h"
+
 #define HEIGHT_SCREEN 1000
 #define WIDTH_SCREEN 1500
 
