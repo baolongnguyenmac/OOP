@@ -14,6 +14,13 @@ class CBall {
             _dir = LEFT;
         }
 
+        void setDir(int dir) {
+            _dir = dir;
+        }
+        int getDir() {
+            return _dir;
+        }
+
         RectangleShape getBall() {
             return _ball;
         }
@@ -52,10 +59,19 @@ class CBall {
                 _speed += 0.5f;
                 switch (_dir) {
                     case LEFT: {
-                        if (paddle1.getPlayerServe()) {
-                            _dir = RIGHT_UP;
-                        } else {
-                            _dir = RIGHT_DOWN;
+                        int a = rand() % 3;
+                        switch (a) {
+                            case 0:
+                                _dir = RIGHT;
+                                break;
+
+                            case 1:
+                                _dir = RIGHT_DOWN;
+                                break;
+
+                            case 2: 
+                                _dir = RIGHT_UP;
+                                break;
                         }
                     } break;
 
@@ -74,10 +90,19 @@ class CBall {
                 _speed += 0.5f;
                 switch (_dir) {
                     case RIGHT: {
-                        if (paddle2.getPlayerServe()) {
-                            _dir = LEFT_UP;
-                        } else {
-                            _dir = LEFT_DOWN;
+                        int a = rand() % 3;
+                        switch (a) {
+                            case 0: 
+                                _dir = LEFT;
+                                break;
+
+                            case 1: 
+                                _dir = LEFT_UP;
+                                break;
+
+                            case 2:
+                                _dir = LEFT_DOWN;
+                                break;
                         }
                     } break;
 
@@ -112,15 +137,15 @@ class CBall {
             // p1 wins 1point
             if (_ball.getPosition().x + SIZE_BALL.x >= WIDTH_SCREEN) {
                 paddle1.setPoint(paddle1.getPoint() + 1);
-                // paddle2.setPlayerServe(true);
-                // paddle1.setPlayerServe(false);
+                _speed = SPEED_BALL;
+                _ball.setPosition(paddle2.getPaddle().getPosition().x - SIZE_BALL.x - SIZE_PADDLE.x, paddle2.getPaddle().getPosition().y + SIZE_PADDLE.y/2);
             }
 
             // p2 wins 1point
             if (_ball.getPosition().x <= 0) {
                 paddle2.setPoint(paddle2.getPoint() + 1);
-                // paddle2.setPlayerServe(true);
-                // paddle1.setPlayerServe(false);
+                _speed = SPEED_BALL;
+                _ball.setPosition(paddle1.getPaddle().getPosition().x + SIZE_PADDLE.x, paddle1.getPaddle().getPosition().y + SIZE_PADDLE.y/2);
             }
 
             // direction
