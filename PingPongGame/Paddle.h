@@ -5,7 +5,8 @@
 
 class CPaddle {
     public:
-        CPaddle() {
+        CPaddle(Vector2f beginPos) {
+            _paddle.setPosition(beginPos);
             _speed = SPEED_PADDLE;
             _paddle.setFillColor(Color::White);
             _paddle.setSize(SIZE_PADDLE);
