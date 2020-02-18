@@ -5,10 +5,16 @@
 
 int main(int argc, char const *argv[]) {
     RenderWindow window(VideoMode(WIDTH_SCREEN, HEIGHT_SCREEN), "SFML");
-    
-    CPaddle *paddle1 = new CPaddle(POS_PADDLE_1);
-    CPaddle *paddle2 = new CPaddle(POS_PADDLE_2);
+
+    sf::Vertex line[] = {
+        sf::Vertex(sf::Vector2f(WIDTH_SCREEN / 2, 0)),
+        sf::Vertex(sf::Vector2f(WIDTH_SCREEN / 2, HEIGHT_SCREEN))
+    };
+
+    CPaddle *paddle1 = new CPaddle(POS_PADDLE_1, POS_SCORE_1);
+    CPaddle *paddle2 = new CPaddle(POS_PADDLE_2, POS_SCORE_2);
     CBall *ball = new CBall;
+    // CControl *control = CControl::getInstance();
     CControl *control = new CControl;
 
     while (window.isOpen()) {
@@ -26,6 +32,7 @@ int main(int argc, char const *argv[]) {
         paddle1->drawPaddle(window);
         paddle2->drawPaddle(window);
         ball->drawBall(window);
+        window.draw(line, 2, Lines);
         window.display();
     }
 
