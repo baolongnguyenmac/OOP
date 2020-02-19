@@ -54,6 +54,8 @@ class CPaddle {
         }
 
         void drawPaddle(RenderWindow &window) {
+            _text.setString(to_string(_point));
+            window.draw(_text);
             window.draw(_paddle);
         }
 
