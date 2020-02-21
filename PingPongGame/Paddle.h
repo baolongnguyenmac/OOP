@@ -54,9 +54,18 @@ class CPaddle {
         }
 
         void drawPaddle(RenderWindow &window) {
-            _text.setString(to_string(_point));
-            window.draw(_text);
+            // mục đích chính là để fix cái đọan demo ban đầu (không cho in ra score)
+            if (_point >= 0) {
+                _text.setString(to_string(_point));
+                window.draw(_text);
+            }
             window.draw(_paddle);
+        }
+
+        void drawWinner(RenderWindow &window, string numOfPlayer) {
+            string win = "Player " + numOfPlayer + "win";
+            _text.setString(win);
+            window.draw(_text);
         }
 
         void setupText() {
@@ -68,6 +77,10 @@ class CPaddle {
             _text.setString(to_string(_point));
             _text.setColor(Color::Green);
             _text.setCharacterSize(150);
+        }
+
+        void setText(string text) {
+            _text.setString(text);
         }
 
     private:
