@@ -2,6 +2,7 @@
 #define MENU_H_
 
 #include "pre.h"
+#include "Ball.h"
 
 #define MAX_NUMBER_OF_ITEMS 3
 
@@ -57,6 +58,70 @@ class Menu {
         
         int GetPressedItem() { 
             return selectedItemIndex; 
+        }
+
+        int runMenu(RenderWindow &window) {
+            Clock clock;
+            const float FPS = 60.0f; // The desired FPS. (The number of updates each second).
+            bool redraw = true;      // Do I redraw everything on the screen?
+
+            // khoiwr taoj ddoois tuowngj 
+            CPaddle *player1 = new CPaddle(POS_PADDLE_1, POS_SCORE_1);
+            player1->setSpeed(5.0);
+            CPaddle *player2 = new CPaddle(POS_PADDLE_2, POS_SCORE_2);
+            player2->setSpeed(5.0);
+            CBall *ball = new CBall;
+            ball->setSpeed(5.0);
+            CControl *control = new CControl;
+
+            while (window.isOpen()) {
+                Event e;
+
+                ball->logicDemo(player1, player2);
+
+                while (window.pollEvent(e)) {
+                    switch (e.type) {
+                        case Event::Closed: {
+                            window.close();
+                        } break;
+
+                        case Event::KeyReleased: {
+                            switch (e.key.code) {
+                                case Keyboard::Up: {
+                                    MoveUp();
+                                } break;
+
+                                case Keyboard::Down: {
+                                    MoveDown();
+                                } break;
+
+                                case Keyboard::Enter: {
+                                    return selectedItemIndex;
+                                } break;
+                            }
+                        } break;
+                    }
+                }
+
+                // Wait until 1/60th of a second has passed, then update everything.
+                if (clock.getElapsedTime().asSeconds() >= 1.0f / (FPS)) {
+                    redraw = true; // We're ready to redraw everything
+                    clock.restart();
+                }
+                else {
+                    Time sleepTime = seconds((1.0f / FPS) - clock.getElapsedTime().asSeconds());
+                    sleep(sleepTime);
+                }
+
+                if (redraw) {
+                    window.clear();
+                    draw(window);
+                    player1->drawPaddle(window);
+                    player2->drawPaddle(window);
+                    ball->drawBall(window);
+                    window.display();
+                }
+            }
         }
 
     private:
