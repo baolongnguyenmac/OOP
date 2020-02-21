@@ -53,12 +53,12 @@ class CBall {
             }
         }
 
-        void logic(CPaddle &paddle1, CPaddle &paddle2) {
-            // bong cham paddle1
-            if (isCollision(paddle1)) {
+        void logic(CPaddle &player1, CPaddle &player2) {
+            // bong cham player1
+            if (isCollision(player1)) {
                 _speed += 0.25f;
-                paddle1.setSpeed(paddle1.getSpeed() + 0.25);
-                paddle2.setSpeed(paddle1.getSpeed());
+                player1.setSpeed(player1.getSpeed() + 0.25);
+                player2.setSpeed(player1.getSpeed());
                 switch (_dir) {
                     case LEFT: {
                         int a = rand() % 3;
@@ -87,10 +87,10 @@ class CBall {
                 }
             }
 
-            // bong cham paddle2
-            if (isCollision(paddle2)) {
-                paddle1.setSpeed(paddle1.getSpeed() + 0.25);
-                paddle2.setSpeed(paddle1.getSpeed());
+            // bong cham player2
+            if (isCollision(player2)) {
+                player1.setSpeed(player1.getSpeed() + 0.25);
+                player2.setSpeed(player1.getSpeed());
                 _speed += 0.25f;
                 switch (_dir) {
                     case RIGHT: {
@@ -140,41 +140,41 @@ class CBall {
 
             // p1 wins 1point
             if (_ball.getPosition().x + SIZE_BALL.x >= WIDTH_SCREEN) {
-                paddle2.setPlayerServe(true);
-                paddle1.setPoint(paddle1.getPoint() + 1);
+                player2.setPlayerServe(true);
+                player1.setPoint(player1.getPoint() + 1);
 
                 // set speed lai nhu cu
                 _speed = SPEED_BALL;
-                paddle1.setSpeed(SPEED_PADDLE);
-                paddle2.setSpeed(SPEED_PADDLE);
+                player1.setSpeed(SPEED_PADDLE);
+                player2.setSpeed(SPEED_PADDLE);
 
-                cout << "p1 | p2: " << paddle1.getPoint() << " | " << paddle2.getPoint() << endl;
+                // cout << "p1 | p2: " << player1.getPoint() << " | " << player2.getPoint() << endl;
             }
 
             // p2 wins 1point
             if (_ball.getPosition().x <= 0) {
-                paddle1.setPlayerServe(true);
-                paddle2.setPoint(paddle2.getPoint() + 1);
+                player1.setPlayerServe(true);
+                player2.setPoint(player2.getPoint() + 1);
 
                 // set speed lai nhu cu
                 _speed = SPEED_BALL;
-                paddle1.setSpeed(SPEED_PADDLE);
-                paddle2.setSpeed(SPEED_PADDLE);
+                player1.setSpeed(SPEED_PADDLE);
+                player2.setSpeed(SPEED_PADDLE);
 
-                cout << "p1 | p2: " << paddle1.getPoint() << " | " << paddle2.getPoint() << endl;
+                // cout << "p1 | p2: " << player1.getPoint() << " | " << player2.getPoint() << endl;
             }
 
             // set lai vi tri ball khi co luot choi
-            if (paddle1.getPlayerServe()) {
-                _ball.setPosition(paddle1.getPaddle().getPosition().x + SIZE_PADDLE.x, paddle1.getPaddle().getPosition().y + SIZE_PADDLE.y/2);
+            if (player1.getPlayerServe()) {
+                _ball.setPosition(player1.getPaddle().getPosition().x + SIZE_PADDLE.x, player1.getPaddle().getPosition().y + SIZE_PADDLE.y/2);
             }
-            else if (paddle2.getPlayerServe()) {
-                _ball.setPosition(paddle2.getPaddle().getPosition().x - SIZE_BALL.x, paddle2.getPaddle().getPosition().y + SIZE_PADDLE.y/2);
+            else if (player2.getPlayerServe()) {
+                _ball.setPosition(player2.getPaddle().getPosition().x - SIZE_BALL.x, player2.getPaddle().getPosition().y + SIZE_PADDLE.y/2);
             }
 
             // direction
             // chi xet _dir khi bong dang chay
-            if (!paddle1.getPlayerServe() || !paddle2.getPlayerServe())
+            if (!player1.getPlayerServe() || !player2.getPlayerServe())
                 switch (_dir) {
                     case LEFT: {
                         moveLeft();
@@ -208,6 +208,56 @@ class CBall {
 
         void drawBall(RenderWindow &window) {
             window.draw(_ball);
+        }
+
+        // use as a video in order to demo game at the beginning 
+        void logicDemo(CPaddle *player1, CPaddle *player2) {
+            logic(*player1, *player2);
+            player1->setPoint(-9999);
+            player2->setPoint(-9999);
+
+            // xử lý trường hợp bấm phím space để phát bóng
+            if(player1->getPlayerServe()) {
+                player1->setPlayerServe(false);
+                setDir(RIGHT);
+            }
+            else if(player2->getPlayerServe()) {
+                player2->setPlayerServe(false);
+                setDir(LEFT);
+            }
+
+            // xử lý autorun
+            switch (getDir()) {
+                case RIGHT:
+                case RIGHT_UP:
+                case RIGHT_DOWN: {
+                    if (_ball.getPosition().x >= WIDTH_SCREEN/2) {
+                        if (_ball.getPosition().y > player2->getPaddle().getPosition().y + SIZE_PADDLE.y /2) {
+                            player2->moveDown();
+                        }
+                        else {
+                            player2->moveUp();
+                        }
+                    }
+                } break;
+
+                case LEFT:
+                case LEFT_DOWN:
+                case LEFT_UP: {
+                    if (_ball.getPosition().x < WIDTH_SCREEN/2) {
+                        if (_ball.getPosition().y > player1->getPaddle().getPosition().y + SIZE_PADDLE.y /2) {
+                            player1->moveDown();
+                        }
+                        else {
+                            player1->moveUp();
+                        }
+                    }
+                } break;
+            }
+        }
+
+        void setSpeed(float speed) {
+            _speed = speed;
         }
 
     private:
