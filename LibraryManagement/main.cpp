@@ -4,7 +4,7 @@
 int main(int argc, char const *argv[]) {
     CListBook *listBook = CListBook::getInstance();
 
-    listBook->push(CBook("meo", "meo", "meo", "meo", 12));
+    // listBook->push(CBook("meo", "meo", "meo", "meo", 12));
 
     listBook->printListBook();
 
