@@ -235,6 +235,42 @@ class CListBook {
 
     #pragma endregion   Giao diện 
 
+        void writeFile() {
+            fstream file(BOOK_DATA, ios::binary | ios::out);
+            if (file.is_open()) {
+                for (int i = 0; i < _listBook.size(); i++) {
+                    if (!_listBook[i].isEmpty()) {
+                        for (CNode *p = _listBook[i]._pHead; p != NULL; p = p->getNext()) {
+                            p->getBook().writeFile(file);
+                        }
+                    }
+                }
+            }
+            else {
+                cout << "Loi mo file\n";
+            }
+            file.close();
+        }
+
+        void readFile() {
+            fstream file(BOOK_DATA, ios::binary | ios::in);
+            if (file.is_open()) {
+                CBook *temp;
+                while (!file.eof()) {
+                    temp = new CBook;
+                    temp->readFile(file);
+                    if (temp->getBookName() == "") {
+                        break;
+                    }
+                    push(*temp);
+                }
+                delete temp;
+            }
+            else {
+                cout << "Loi mo file\n";
+            }
+        }
+
         long long HashString(string name) {
             string s;
             if (name.length() >= 7) {
@@ -260,15 +296,6 @@ class CListBook {
                 throw DUPLICATED_BOOK;
             }
             _listBook[h].push(b);
-
-            fstream file(BOOK_DATA, ios::app | ios::binary);
-            if (file.is_open()) {
-                file.write((char*) &b, sizeof(CBook));
-            }
-            else {
-                cout << "Loi mo file\n";
-            }
-            file.close();
         }
 
         bool update(CNode *p, int hashIndex, CBook newBook) {
@@ -304,22 +331,7 @@ class CListBook {
         CListBook(){
             _listBook.resize(LIST_BOOK_CAPACITY, CList());
 
-            fstream file(BOOK_DATA, ios::binary | ios::in);
-            if (!file.is_open()) {
-                cout << "Loi mo file\n";
-            }
-            else {
-                CBook *temp;
-                while (true) {
-                    temp = new CBook;
-                    file.read((char*) temp, sizeof(CBook));
-                    if (temp->getBookName() == "") {
-                        break;
-                    }
-                    push(*temp);
-                }
-            }
-            file.close();
+            readFile();
         }
 };
 
