@@ -17,14 +17,17 @@ int main(int argc, char const *argv[]) {
         listBook->push(CBook("Hinh hoc 10" , "9",  "Nha xuat ban Giao duc", "Nguyen Van Ga", (rand()%20 + 1)*1000));
         listBook->push(CBook("Hinh hoc 11" , "10", "Nha xuat ban Giao duc", "Nguyen Van Ga", (rand()%20 + 1)*1000));
         listBook->push(CBook("Hinh hoc 12" , "11", "Nha xuat ban Giao duc", "Nguyen Van Ga", (rand()%20 + 1)*1000));
+        listBook->push(CBook("Hinh hoc 12" , "12", "Nha xuat ban Giao duc", "Nguyen Bao Long", (rand()%20 + 1)*1000));
     }
     catch (int n) {
         cout << "i'm fucked\n";
     }
 
     // listBook->update();
-    string a = "Ngu van 12";
-    listBook->erase(a);
+    // string a = "Ngu van 12";
+    listBook->erase();
+
+    listBook->update();
 
     listBook->writeFile();
 
