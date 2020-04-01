@@ -60,45 +60,46 @@ class CList {
             }
         }
 
-        vector<CNode*> getVectorDel(string bookName) {
-            vector<CNode*> listDel;
-            for (CNode *p = _pHead; p != NULL; p = p->_pNext) {
-                if (p->_book.getBookName() == bookName) {
-                    listDel.push_back(p);
-                }
-            }
-            return listDel;
-        }
+        // vector<CNode*> getVectorDel(string bookName) {
+        //     vector<CNode*> listDel;
+        //     for (CNode *p = _pHead; p != NULL; p = p->_pNext) {
+        //         if (p->_book.getBookName() == bookName) {
+        //             listDel.push_back(p);
+        //         }
+        //     }
+        //     return listDel;
+        // }
 
-        void erase(string bookName) {
-            // trong th tên sách trùng nhau nhiều
-            // chúng ta cần 1 listDel chứa các node có sách trùng tên
-            vector<CNode*> listDel = getVectorDel(bookName);
+        // void erase(string bookName) {
+        //     // trong th tên sách trùng nhau nhiều
+        //     // chúng ta cần 1 listDel chứa các node có sách trùng tên
+        //     vector<CNode*> listDel = getVectorDel(bookName);
 
-            if (listDel.size() == 0) {
-                cout << "Khong tim thay sach\n";
-            }
-            // nếu chỉ có 1 sách có tên bookName
-            else if (listDel.size() == 1) {
-                erase(listDel[0]);
-            }
-            // nếu phát hiện nhiều sách trùng tên nhau 
-            else {
-                cout << "Nhap ten tac gia: ";
-                string tacGia;
-                getline(cin, tacGia);
-                for (int i = 0; i < listDel.size(); i++) {
-                    if (bookName == listDel[i]->_book.getBookName() && tacGia == listDel[i]->_book.getTacGia()) {
-                        erase(listDel[i]);
-                        return;
-                    }
-                }
-            }
-        }
+        //     if (listDel.size() == 0) {
+        //         cout << "Khong tim thay sach\n";
+        //     }
+        //     // nếu chỉ có 1 sách có tên bookName
+        //     else if (listDel.size() == 1) {
+        //         erase(listDel[0]);
+        //     }
+        //     // nếu phát hiện nhiều sách trùng tên nhau 
+        //     else {
+        //         cout << "Nhap ten tac gia: ";
+        //         string tacGia;
+        //         getline(cin, tacGia);
+        //         for (int i = 0; i < listDel.size(); i++) {
+        //             if (bookName == listDel[i]->_book.getBookName() && tacGia == listDel[i]->_book.getTacGia()) {
+        //                 erase(listDel[i]);
+        //                 return;
+        //             }
+        //         }
+        //     }
+        // }
 
     #pragma endregion Giao diện
 
-        void erase(CNode *del) {
+        CNode* erase(CNode *del) {
+            CNode *oldNode = new CNode(del->getBook());
             if (del == _pHead) {
                 _pHead = _pHead->_pNext;
                 delete del;
@@ -111,6 +112,7 @@ class CList {
                     }
                 }
             }
+            return oldNode;
         }
 
         bool isEmpty() {
@@ -157,12 +159,26 @@ class CList {
 class CListBook {
     public: 
     #pragma region Giao diện 
+
+        void printListBook() {
+            int count = 0;
+            for (int i = 0; i < _listBook.size(); i++) {
+                if (!_listBook[i].isEmpty()) {
+                    for (CNode *p = _listBook[i]._pHead; p != NULL; p = p->getNext()) {
+                        cout << count << ".  " << p->getBook() << endl;
+                        count++;
+                    }
+                }
+            }
+        }
+
         void push() {
             cout << "Nhap sach can add:\n";
             CBook book;
             cin >> book;
             try {
                 push(book);
+                cout << "Them sach thanh cong\n";
             }
             catch (int n) {
                 if (n == DUPLICATED_BOOK) {
@@ -170,6 +186,41 @@ class CListBook {
                 }
             }
         }
+
+        void erase() {
+            cout << "Nhap ten sach can xoa: ";
+            string bookName;
+            getline(cin, bookName);
+            try {
+                erase(bookName);
+                cout << "Xoa thanh cong\n";
+            }
+            catch (int n) {
+                if (n == BOOK_NOT_FOUND) {
+                    cout << "Khong tim thay sach can xoa\n";
+                }
+            }
+        }
+
+        void update() {
+            cout << "Nhap ten sach can update: ";
+            string bookName;
+            getline(cin, bookName);
+            try {
+                update(bookName);
+                cout << "Update thanh cong\n";
+            }
+            catch (int n) {
+                if (n == DUPLICATED_BOOK) {
+                    cout << "Sach da ton tai trong he thong\n";
+                }
+                else if (n == BOOK_NOT_FOUND) {
+                    cout << "Khong tim thay sach trong he thong\n";
+                }
+            }
+        }
+
+/*
 
         void erase() {
             cout << "Nhap ten sach can xoa: ";
@@ -221,19 +272,60 @@ class CListBook {
             }
         }
 
-        void printListBook() {
-            int count = 0;
-            for (int i = 0; i < _listBook.size(); i++) {
-                if (!_listBook[i].isEmpty()) {
-                    for (CNode *p = _listBook[i]._pHead; p != NULL; p = p->getNext()) {
-                        cout << count << ".  " << p->getBook() << endl;
-                        count++;
-                    }
+*/
+
+    #pragma endregion   Giao diện 
+
+        void update(string bookName) {
+            // có thể throw BOOK_NOT_FOUND
+            CBook oldBook = erase(bookName);
+            cout << "Nhap lai thong tin sach: \n";
+            CBook newBook;
+            cin >> newBook;
+            // có thể throw DUPLICATE_BOOK
+            try {
+                push(newBook);
+            }
+            catch (int n) {
+                if (n == DUPLICATED_BOOK) {
+                    push(oldBook);
+                    throw DUPLICATED_BOOK;
                 }
             }
         }
 
-    #pragma endregion   Giao diện 
+        CBook erase(string bookName) {
+            int h = HashString(bookName) % LIST_BOOK_CAPACITY;
+            vector<CNode*> del;
+
+            for (CNode *p = _listBook[h]._pHead; p != NULL; p = p->getNext()) {
+                if (p->getBook().getBookName() == bookName) {
+                    del.push_back(p);
+                }
+            }
+
+            if (del.size() == 0) {
+                throw BOOK_NOT_FOUND;
+            }
+            else if (del.size() == 1) {
+                return erase(del[0], h);
+            }
+            else {
+                cout << "Tim thay nhieu sach co ten" << bookName << "\nNhap ten tac gia: ";
+                string tacGia;
+                getline(cin, tacGia);
+                for (int i = 0; i < del.size(); i++) {
+                    if (tacGia == del[i]->getBook().getTacGia()) {
+                        return erase(del[i], h);
+                    }
+                }
+                throw BOOK_NOT_FOUND;
+            }
+        }
+
+        CBook erase(CNode *p, int hashIndex) {
+            return _listBook[hashIndex].erase(p)->getBook();
+        }
 
         void writeFile() {
             fstream file(BOOK_DATA, ios::binary | ios::out);
@@ -298,6 +390,8 @@ class CListBook {
             _listBook[h].push(b);
         }
 
+/*
+
         bool update(CNode *p, int hashIndex, CBook newBook) {
             // xoá sách cần update ra khỏi list nhưng lưu lại thông tin sách đó vào 1 biến phụ 
             CBook book = p->getBook();
@@ -316,6 +410,8 @@ class CListBook {
             }
             return true;
         }
+
+*/
 
         static CListBook* getInstance() {
             if (_instance == NULL) {
